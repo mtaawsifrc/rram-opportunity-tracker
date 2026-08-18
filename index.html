@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Open calls for RRAM, memristor, emerging-memory, and in-memory-computing research.">
+  <meta name="theme-color" content="#101418">
+  <title>RRAM Opportunity Tracker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar" id="top">
+    <a class="brand" href="#top" aria-label="RRAM Opportunity Tracker home">
+      <span class="brand-mark" aria-hidden="true">R</span>
+      <span><strong>RRAM</strong><small>Opportunity Tracker</small></span>
+    </a>
+    <div class="top-actions">
+      <span class="updated-line">Updated <strong id="lastUpdated">—</strong></span>
+      <button class="quiet-button" id="exportCsv" type="button">Export CSV</button>
+      <button class="icon-button" id="themeToggle" type="button" aria-label="Toggle color theme" title="Toggle theme">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 9 9c0-.4 0-.8-.1-1.2A7 7 0 0 1 13.2 3H12Z"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <section class="tracker-section" id="opportunities">
+      <div class="section-heading">
+        <div>
+          <span class="section-kicker"><span class="live-dot"></span> Open now</span>
+          <h1>Calls for papers</h1>
+        </div>
+        <div class="view-controls" role="group" aria-label="Display options">
+          <button class="segmented active" type="button" data-view="cards">Cards</button>
+          <button class="segmented" type="button" data-view="table">Table</button>
+        </div>
+      </div>
+
+      <details class="profile-panel">
+        <summary><span>Personalize ranking</span><small>Choose research topics</small></summary>
+        <div class="profile-content">
+          <div class="topic-pills" id="profileTopics" aria-label="Research topic preferences"></div>
+          <button class="text-button" id="resetProfile" type="button">Reset topics</button>
+        </div>
+      </details>
+
+      <div class="filters">
+        <label class="search-box">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m21 21-4.4-4.4m2.4-5.1a7.5 7.5 0 1 1-15 0 7.5 7.5 0 0 1 15 0Z"/></svg>
+          <input id="searchInput" type="search" placeholder="Search topic, venue, or publisher" autocomplete="off">
+        </label>
+        <select id="publisherFilter" aria-label="Filter by publisher network"><option value="all">All publishers</option></select>
+        <select id="typeFilter" aria-label="Filter by opportunity type"><option value="all">All types</option></select>
+        <select id="topicFilter" aria-label="Filter by research topic"><option value="all">All topics</option></select>
+        <select id="sortFilter" aria-label="Sort opportunities">
+          <option value="personal">Best match</option>
+          <option value="deadline">Nearest deadline</option>
+          <option value="fit">Curated fit</option>
+          <option value="updated">Recently verified</option>
+        </select>
+        <label class="switch"><input id="archiveToggle" type="checkbox"><span></span> Include watch list &amp; archive</label>
+        <label class="switch"><input id="favoriteToggle" type="checkbox"><span></span> Favorites only</label>
+      </div>
+
+      <div class="result-bar"><span id="resultCount">0 opportunities</span><span id="activeFilterText">Showing open calls</span></div>
+      <div class="cards-grid" id="cardsView"></div>
+      <div class="table-wrap hidden" id="tableView">
+        <table>
+          <thead><tr><th>Opportunity</th><th>Type</th><th>Deadline</th><th>Venue information</th><th>Fit</th><th></th></tr></thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
+      <div class="empty-state hidden" id="emptyState"><h2>No matching open calls</h2><p>Try clearing a filter or include the watch list and archive.</p></div>
+    </section>
+  </main>
+
+  <footer>
+    <span>Independent research utility</span>
+    <p>Verify deadlines, metrics, fees, and scope on the linked official page before submitting.</p>
+    <a href="#top">Back to top ↑</a>
+  </footer>
+
+  <dialog id="detailDialog">
+    <button class="dialog-close" id="dialogClose" type="button" aria-label="Close">×</button>
+    <div id="dialogContent"></div>
+  </dialog>
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

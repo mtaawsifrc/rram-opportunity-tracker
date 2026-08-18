@@ -1,0 +1,767 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Open calls for RRAM, memristor, emerging-memory, and in-memory-computing research.">
+  <meta name="theme-color" content="#101418">
+  <title>RRAM Opportunity Tracker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+:root {
+  --bg: #101418;
+  --surface: #171c21;
+  --surface-raised: #1d2329;
+  --text: #f3f5f7;
+  --muted: #99a3ad;
+  --line: #2c343c;
+  --accent: #69d8c7;
+  --accent-soft: rgba(105, 216, 199, .1);
+  --warning: #eac272;
+  --danger: #c98c8c;
+  --shadow: 0 14px 40px rgba(0, 0, 0, .18);
+  --font: "Inter", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", monospace;
+}
+
+[data-theme="light"] {
+  --bg: #f5f6f7;
+  --surface: #ffffff;
+  --surface-raised: #ffffff;
+  --text: #172028;
+  --muted: #68747e;
+  --line: #dce1e5;
+  --accent: #087d70;
+  --accent-soft: rgba(8, 125, 112, .08);
+  --warning: #926411;
+  --danger: #985a5a;
+  --shadow: 0 14px 40px rgba(30, 45, 55, .08);
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+}
+button, input, select { font: inherit; }
+button, a, summary, select { -webkit-tap-highlight-color: transparent; }
+
+.topbar {
+  width: min(1180px, calc(100% - 40px));
+  min-height: 72px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  border-bottom: 1px solid var(--line);
+}
+.brand { display: flex; align-items: center; gap: 11px; color: var(--text); text-decoration: none; }
+.brand-mark {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  color: var(--accent);
+  font: 600 14px var(--mono);
+}
+.brand > span:last-child { display: flex; flex-direction: column; gap: 2px; }
+.brand strong { font-size: 13px; letter-spacing: .1em; }
+.brand small { color: var(--muted); font-size: 9px; }
+.top-actions { display: flex; align-items: center; gap: 10px; }
+.updated-line { color: var(--muted); font-size: 10px; margin-right: 4px; }
+.updated-line strong { color: var(--text); font-weight: 500; }
+.quiet-button, .icon-button {
+  height: 36px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
+}
+.quiet-button { padding: 0 13px; font-size: 10px; font-weight: 600; }
+.icon-button { width: 36px; display: grid; place-items: center; }
+.icon-button svg { width: 16px; fill: var(--muted); }
+.quiet-button:hover, .icon-button:hover { border-color: var(--accent); }
+
+main { width: min(1180px, calc(100% - 40px)); margin: 0 auto; }
+.tracker-section { padding: 64px 0 90px; }
+.section-heading { display: flex; justify-content: space-between; align-items: end; gap: 24px; margin-bottom: 28px; }
+.section-kicker {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--accent);
+  font: 500 10px var(--mono);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.live-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); }
+h1 { margin: 9px 0 0; font-size: clamp(36px, 6vw, 58px); line-height: 1; letter-spacing: -.045em; }
+.view-controls { display: flex; padding: 3px; border: 1px solid var(--line); border-radius: 10px; }
+.segmented { border: 0; border-radius: 7px; padding: 8px 12px; background: transparent; color: var(--muted); cursor: pointer; font-size: 10px; font-weight: 600; }
+.segmented.active { background: var(--surface-raised); color: var(--text); box-shadow: 0 1px 4px rgba(0,0,0,.12); }
+
+.profile-panel { margin-bottom: 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
+.profile-panel summary { padding: 14px 16px; cursor: pointer; display: flex; align-items: center; gap: 10px; font-size: 11px; font-weight: 600; }
+.profile-panel summary::marker { color: var(--accent); }
+.profile-panel summary small { color: var(--muted); font-size: 9px; font-weight: 400; }
+.profile-content { padding: 0 16px 16px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.topic-pills { display: flex; flex-wrap: wrap; gap: 7px; }
+.topic-pill {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 6px 9px;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  font: 500 9px var(--mono);
+}
+.topic-pill.active { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); }
+.text-button { border: 0; background: transparent; color: var(--accent); cursor: pointer; white-space: nowrap; font-size: 10px; font-weight: 600; }
+
+.filters { display: grid; grid-template-columns: minmax(250px, 1.5fr) repeat(4, minmax(130px, .72fr)); gap: 9px; align-items: center; }
+.search-box, select {
+  height: 44px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--text);
+}
+.search-box { display: flex; align-items: center; gap: 9px; padding: 0 12px; }
+.search-box svg { width: 16px; fill: none; stroke: var(--muted); stroke-width: 1.7; }
+.search-box input { width: 100%; border: 0; outline: 0; background: transparent; color: var(--text); font-size: 11px; }
+select { min-width: 0; padding: 0 10px; font-size: 10px; }
+.switch { height: 34px; display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 9px; white-space: nowrap; }
+.switch:first-of-type { grid-column: 1 / span 2; }
+.switch input { display: none; }
+.switch span { width: 30px; height: 17px; border-radius: 20px; border: 1px solid var(--line); position: relative; flex: 0 0 auto; }
+.switch span::after { content: ""; position: absolute; width: 11px; height: 11px; left: 2px; top: 2px; border-radius: 50%; background: var(--muted); transition: .18s; }
+.switch input:checked + span { border-color: var(--accent); background: var(--accent-soft); }
+.switch input:checked + span::after { left: 15px; background: var(--accent); }
+.result-bar { display: flex; justify-content: space-between; gap: 20px; padding: 22px 2px 12px; color: var(--muted); font: 400 9px var(--mono); }
+
+.cards-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.opportunity-card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 22px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+.card-top { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 9px; }
+.status-badge {
+  display: inline-flex;
+  width: max-content;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 8px;
+  border-radius: 999px;
+  font: 500 8px var(--mono);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+.status-badge::before { content: ""; width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+.status-open { color: var(--accent); background: var(--accent-soft); }
+.status-watch { color: var(--warning); background: rgba(234,194,114,.1); }
+.status-closed { color: var(--muted); background: rgba(153,163,173,.09); }
+.type-label { overflow: hidden; color: var(--muted); font: 400 8px var(--mono); text-overflow: ellipsis; white-space: nowrap; }
+.favorite-button { width: 31px; height: 31px; border: 1px solid var(--line); border-radius: 8px; background: transparent; color: var(--muted); cursor: pointer; font-size: 16px; }
+.favorite-button.active { color: var(--warning); }
+.opportunity-card h2 { margin: 18px 0 7px; font-size: 20px; line-height: 1.28; letter-spacing: -.025em; }
+.publisher { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; color: var(--muted); font-size: 10px; line-height: 1.5; }
+.publisher-chip { display: inline-flex; width: max-content; padding: 4px 6px; border: 1px solid var(--line); border-radius: 6px; color: var(--accent); font: 500 7px var(--mono); letter-spacing: .05em; text-transform: uppercase; }
+.deadline-row { display: grid; grid-template-columns: 1fr auto; align-items: end; gap: 15px; margin: 20px 0 0; padding: 16px 0; border-top: 1px solid var(--line); }
+.deadline-row small, .venue-facts small, .dialog-stat small { display: block; margin-bottom: 6px; color: var(--muted); font: 500 8px var(--mono); letter-spacing: .04em; }
+.deadline-row strong { font-size: 14px; }
+.countdown { text-align: right; }
+.countdown b { display: block; color: var(--accent); font: 500 18px var(--mono); }
+.countdown span { color: var(--muted); font-size: 8px; }
+.venue-facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border: 1px solid var(--line); border-radius: 10px; background: var(--bg); }
+.venue-facts > div { min-width: 0; padding: 12px; }
+.venue-facts > div + div { border-left: 1px solid var(--line); }
+.venue-facts strong { display: block; overflow-wrap: anywhere; font-size: 10px; line-height: 1.45; }
+.fit-block { display: grid; grid-template-columns: 42px 1fr; gap: 11px; align-items: start; padding-top: 16px; }
+.fit-score { color: var(--accent); font: 500 17px var(--mono); }
+.fit-block .fit-score { width: 42px; height: 42px; display: grid; place-items: center; border: 1px solid var(--line); border-radius: 10px; }
+.fit-block strong { font-size: 10px; }
+.fit-block p { margin: 4px 0 0; color: var(--muted); font-size: 9px; line-height: 1.5; }
+.tag-list { display: flex; flex-wrap: wrap; gap: 5px; margin: 14px 0; }
+.tag { padding: 4px 6px; border-radius: 6px; background: var(--bg); color: var(--muted); font: 400 8px var(--mono); }
+.card-actions { display: flex; gap: 8px; margin-top: auto; }
+.card-actions button, .card-actions a { height: 36px; display: inline-flex; align-items: center; justify-content: center; border-radius: 9px; padding: 0 12px; text-decoration: none; cursor: pointer; font-size: 9px; font-weight: 600; }
+.detail-button { border: 1px solid var(--line); background: var(--surface-raised); color: var(--text); }
+.card-actions .detail-button { flex: 1; }
+.source-button { border: 1px solid var(--line); color: var(--accent); }
+.calendar-button { width: 36px; padding: 0 !important; border: 1px solid var(--line); background: transparent; color: var(--muted); }
+
+.table-wrap { overflow: auto; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
+table { width: 100%; min-width: 920px; border-collapse: collapse; }
+th, td { padding: 15px 14px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; font-size: 10px; }
+th { color: var(--muted); font: 500 8px var(--mono); letter-spacing: .06em; text-transform: uppercase; }
+td strong, td small { display: block; }
+td strong { margin-bottom: 5px; font-size: 10px; line-height: 1.4; }
+td small { color: var(--muted); line-height: 1.45; }
+td .status-badge { margin-bottom: 6px; }
+td .detail-button { height: 32px; border-radius: 8px; padding: 0 10px; cursor: pointer; }
+.hidden { display: none !important; }
+.empty-state { padding: 60px 20px; border: 1px dashed var(--line); border-radius: 12px; text-align: center; }
+.empty-state h2 { margin: 0; font-size: 18px; }
+.empty-state p { color: var(--muted); font-size: 10px; }
+
+footer { width: min(1180px, calc(100% - 40px)); margin: 0 auto; padding: 24px 0 36px; border-top: 1px solid var(--line); display: flex; align-items: center; justify-content: space-between; gap: 22px; color: var(--muted); font-size: 9px; }
+footer p { margin: 0; text-align: center; }
+footer a { color: var(--accent); text-decoration: none; }
+
+dialog { width: min(720px, calc(100% - 28px)); max-height: calc(100vh - 28px); overflow: auto; padding: 0; border: 1px solid var(--line); border-radius: 16px; background: var(--surface-raised); color: var(--text); box-shadow: 0 30px 100px rgba(0,0,0,.45); }
+dialog::backdrop { background: rgba(3, 7, 10, .72); backdrop-filter: blur(5px); }
+.dialog-close { position: absolute; top: 14px; right: 14px; width: 34px; height: 34px; border: 1px solid var(--line); border-radius: 9px; background: transparent; color: var(--text); cursor: pointer; font-size: 20px; }
+.dialog-inner { padding: 30px; }
+.dialog-inner h2 { margin: 16px 48px 8px 0; font-size: 27px; line-height: 1.2; letter-spacing: -.035em; }
+.dialog-meta { display: flex; align-items: center; flex-wrap: wrap; gap: 7px; color: var(--muted); font-size: 9px; }
+.dialog-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; margin: 22px 0; }
+.dialog-stat { padding: 13px; border: 1px solid var(--line); border-radius: 10px; }
+.dialog-stat strong { font-size: 10px; line-height: 1.45; }
+.dialog-section { margin: 20px 0; }
+.dialog-section h3 { margin: 0 0 7px; color: var(--accent); font: 600 9px var(--mono); letter-spacing: .07em; text-transform: uppercase; }
+.dialog-section p { margin: 0; color: var(--muted); font-size: 11px; line-height: 1.65; }
+.journal-metric { display: grid; grid-template-columns: 1.1fr .7fr 1.4fr; gap: 10px; padding: 11px 0; border-bottom: 1px solid var(--line); font-size: 9px; }
+.journal-metric span { color: var(--muted); line-height: 1.45; }
+.metric-sources { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.metric-sources a { color: var(--accent); font-size: 9px; text-decoration: none; }
+.metric-note { margin-top: 10px !important; font-size: 9px !important; }
+.dialog-actions { display: flex; gap: 9px; margin-top: 24px; }
+.dialog-actions a, .dialog-actions button { height: 40px; display: inline-flex; align-items: center; justify-content: center; border-radius: 9px; padding: 0 14px; text-decoration: none; font-size: 10px; font-weight: 600; }
+.dialog-actions a { background: var(--accent); color: var(--bg); }
+.dialog-actions button { border: 1px solid var(--line); background: transparent; color: var(--text); cursor: pointer; }
+
+@media (max-width: 980px) {
+  .filters { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .search-box { grid-column: 1 / -1; }
+  .switch:first-of-type { grid-column: auto; }
+}
+
+@media (max-width: 760px) {
+  .topbar, main, footer { width: min(100% - 28px, 1180px); }
+  .updated-line { display: none; }
+  .tracker-section { padding-top: 42px; }
+  .cards-grid { grid-template-columns: 1fr; }
+  .profile-content { align-items: flex-start; flex-direction: column; }
+  footer { align-items: flex-start; flex-direction: column; }
+  footer p { text-align: left; }
+  .journal-metric { grid-template-columns: 1fr; gap: 4px; }
+}
+
+@media (max-width: 520px) {
+  .topbar { min-height: 64px; }
+  .brand small, .quiet-button { display: none; }
+  .section-heading { align-items: flex-start; }
+  h1 { font-size: 39px; }
+  .filters { grid-template-columns: 1fr; }
+  .search-box { grid-column: auto; }
+  .switch:first-of-type { grid-column: auto; }
+  .result-bar { align-items: flex-start; flex-direction: column; gap: 5px; }
+  .opportunity-card { padding: 18px; }
+  .deadline-row { grid-template-columns: 1fr; }
+  .countdown { text-align: left; }
+  .venue-facts { grid-template-columns: 1fr; }
+  .venue-facts > div + div { border-top: 1px solid var(--line); border-left: 0; }
+  .card-actions { flex-wrap: wrap; }
+  .source-button { flex: 1; }
+  .dialog-inner { padding: 23px; }
+  .dialog-grid { grid-template-columns: 1fr; }
+  .dialog-actions { align-items: stretch; flex-direction: column; }
+}
+
+</style>
+</head>
+<body>
+  <header class="topbar" id="top">
+    <a class="brand" href="#top" aria-label="RRAM Opportunity Tracker home">
+      <span class="brand-mark" aria-hidden="true">R</span>
+      <span><strong>RRAM</strong><small>Opportunity Tracker</small></span>
+    </a>
+    <div class="top-actions">
+      <span class="updated-line">Updated <strong id="lastUpdated">—</strong></span>
+      <button class="quiet-button" id="exportCsv" type="button">Export CSV</button>
+      <button class="icon-button" id="themeToggle" type="button" aria-label="Toggle color theme" title="Toggle theme">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 9 9c0-.4 0-.8-.1-1.2A7 7 0 0 1 13.2 3H12Z"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <section class="tracker-section" id="opportunities">
+      <div class="section-heading">
+        <div>
+          <span class="section-kicker"><span class="live-dot"></span> Open now</span>
+          <h1>Calls for papers</h1>
+        </div>
+        <div class="view-controls" role="group" aria-label="Display options">
+          <button class="segmented active" type="button" data-view="cards">Cards</button>
+          <button class="segmented" type="button" data-view="table">Table</button>
+        </div>
+      </div>
+
+      <details class="profile-panel">
+        <summary><span>Personalize ranking</span><small>Choose research topics</small></summary>
+        <div class="profile-content">
+          <div class="topic-pills" id="profileTopics" aria-label="Research topic preferences"></div>
+          <button class="text-button" id="resetProfile" type="button">Reset topics</button>
+        </div>
+      </details>
+
+      <div class="filters">
+        <label class="search-box">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m21 21-4.4-4.4m2.4-5.1a7.5 7.5 0 1 1-15 0 7.5 7.5 0 0 1 15 0Z"/></svg>
+          <input id="searchInput" type="search" placeholder="Search topic, venue, or publisher" autocomplete="off">
+        </label>
+        <select id="publisherFilter" aria-label="Filter by publisher network"><option value="all">All publishers</option></select>
+        <select id="typeFilter" aria-label="Filter by opportunity type"><option value="all">All types</option></select>
+        <select id="topicFilter" aria-label="Filter by research topic"><option value="all">All topics</option></select>
+        <select id="sortFilter" aria-label="Sort opportunities">
+          <option value="personal">Best match</option>
+          <option value="deadline">Nearest deadline</option>
+          <option value="fit">Curated fit</option>
+          <option value="updated">Recently verified</option>
+        </select>
+        <label class="switch"><input id="archiveToggle" type="checkbox"><span></span> Include watch list &amp; archive</label>
+        <label class="switch"><input id="favoriteToggle" type="checkbox"><span></span> Favorites only</label>
+      </div>
+
+      <div class="result-bar"><span id="resultCount">0 opportunities</span><span id="activeFilterText">Showing open calls</span></div>
+      <div class="cards-grid" id="cardsView"></div>
+      <div class="table-wrap hidden" id="tableView">
+        <table>
+          <thead><tr><th>Opportunity</th><th>Type</th><th>Deadline</th><th>Venue information</th><th>Fit</th><th></th></tr></thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
+      <div class="empty-state hidden" id="emptyState"><h2>No matching open calls</h2><p>Try clearing a filter or include the watch list and archive.</p></div>
+    </section>
+  </main>
+
+  <footer>
+    <span>Independent research utility</span>
+    <p>Verify deadlines, metrics, fees, and scope on the linked official page before submitting.</p>
+    <a href="#top">Back to top ↑</a>
+  </footer>
+
+  <dialog id="detailDialog">
+    <button class="dialog-close" id="dialogClose" type="button" aria-label="Close">×</button>
+    <div id="dialogContent"></div>
+  </dialog>
+  <script>
+window.RRAM_DATA = {"meta":{"built":"2026-08-18","publisher_groups":["ACM","ACM / IEEE / EDAA","AIP Publishing","American Chemical Society","Community / Society","Community / Wiley","Elsevier","IEEE","IOP Publishing","MDPI","Springer Nature","The Electrochemical Society","Wiley"],"opportunity_count":12,"source_count":53,"candidate_count":329,"candidate_total_count":335,"tracked_candidate_count":6,"scan_generated":"2026-08-18","scan_stats":{"configured_sources":53,"pages_scanned":1206,"pages_failed":231,"catalogs_read":39,"journals_discovered":4348,"journals_selected":433,"journal_pages_attempted":773,"by_publisher":{"ACM":{"pages_failed":4},"ACM / IEEE / EDAA":{"pages_scanned":2},"AIP Publishing":{"pages_scanned":6},"American Chemical Society":{"pages_scanned":11},"Community / Society":{"pages_scanned":4},"Community / Wiley":{"pages_scanned":1},"Elsevier":{"pages_failed":5},"IEEE":{"pages_scanned":288,"pages_failed":2},"IOP Publishing":{"pages_scanned":8},"MDPI":{"pages_failed":4},"Springer Nature":{"pages_scanned":881,"catalogs_read":39,"journals_discovered":4348,"journals_selected":433,"journal_pages_attempted":773,"pages_failed":215},"The Electrochemical Society":{"pages_scanned":5},"Wiley":{"pages_failed":1}}},"scan_error_count":0},"opportunities":[{"id":"irps-2027","title":"IEEE International Reliability Physics Symposium (IRPS 2027)","short_title":"IRPS 2027","type":"Conference","publisher":"IEEE International Reliability Physics Symposium","publisher_group":"IEEE","publisher_family":"IEEE Reliability Society / IEEE Electron Devices Society","venue":"IRPS","deadline":"2026-10-12T23:59:00-07:00","deadline_precision":"date","event_date":"2027-03-21/2027-03-25","conference_rank":"Tier 1","conference_reputation":"Flagship","conference_rank_note":"A leading international reliability venue for semiconductor devices; the tier is a curated assessment for this tracker, not an official ranking.","publication_date":"2027","status":"open","url":"https://www.irps.org/call-for-paperstopics-of-interest","submission_url":"https://www.irps.org/call-for-paperstopics-of-interest","location":"San Diego, California, USA","topics":["RRAM","Reliability","Variability","Endurance","Retention","Failure physics","Compact modeling","Neuromorphic"],"fit_score":98,"fit_label":"Exceptional fit","fit_reason":"The 2027 call explicitly requests resistive emerging memory, advanced-memory reliability, compact models, variability, failure physics, and neuromorphic-computing reliability.","requirements":"Submit through the official IRPS submission route using the 2027 call's category and formatting instructions. The official call gives an abstract-submission date; confirm the exact cutoff time before submitting.","notes":"One of the strongest venues for endurance, retention, switching variability, degradation, failure mechanisms, reliability-aware compact models, and process-integration studies.","verified":"2026-08-18","source_kind":"official","featured":true},{"id":"date-2027","title":"Design, Automation and Test in Europe (DATE 2027)","short_title":"DATE 2027","type":"Conference","publisher":"Design, Automation and Test in Europe","publisher_group":"ACM / IEEE / EDAA","publisher_family":"DATE Conference","venue":"DATE","deadline":"2026-09-20T23:59:00-12:00","deadline_precision":"datetime","event_date":"2027-03-22/2027-03-24","conference_rank":"Tier 1","conference_reputation":"Flagship","conference_rank_note":"A premier international design, automation, and test venue; the tier is a curated assessment for this tracker, not an official ranking.","publication_date":"2027","status":"open","url":"https://www.date-conference.com/date-2027-call-papers","submission_url":"https://www.date-conference.com/date-2027-call-papers","location":"Dresden, Germany","topics":["RRAM","Emerging memory","In-memory computing","Device-circuit co-design","Reliability","Variability","Hardware security","AI hardware"],"fit_score":78,"fit_label":"Strong system-level fit","fit_reason":"DATE explicitly covers future memories, emerging computing technologies, hardware architectures, and modeling or mitigation of defects, variability, and reliability.","requirements":"Register the title, abstract, and authors by September 13, 2026; submit the final paper by September 20, 2026 Anywhere on Earth. Follow the official track and manuscript instructions.","notes":"Best for RRAM work with a clear circuit, architecture, EDA, security, test, or system-design contribution; a device-only materials paper is less competitive.","verified":"2026-08-18","source_kind":"official","featured":true},{"id":"isqed-2027","title":"International Symposium on Quality Electronic Design (ISQED 2027)","short_title":"ISQED 2027","type":"Conference","publisher":"International Society for Quality Electronic Design","publisher_group":"Community / Society","publisher_family":"ISQED · IEEE technical sponsorship history","venue":"ISQED","deadline":"2026-09-17T23:59:00-07:00","deadline_precision":"datetime","event_date":null,"conference_rank":"Tier 2","conference_reputation":"Established","conference_rank_note":"An established peer-reviewed electronic-design venue with strong cross-layer relevance; the tier is a curated assessment for this tracker.","publication_date":"2027","status":"open","url":"https://www.isqed.org/English/Conference/Call_for_Papers.html","submission_url":"https://softconf.com/p/isqed2027","location":"TBD on the current official conference site","topics":["RRAM","Memristor","Compact modeling","TCAD","Neuromorphic","Hardware security","PUF","Reliability","3D integration"],"fit_score":91,"fit_label":"Excellent cross-layer fit","fit_reason":"The call explicitly names RRAM and memristors, TCAD and device modeling, neuromorphic computing, hardware security primitives, reliability, and emerging device/process technologies.","requirements":"Blind manuscript of four to eight pages using the official format, submitted by midnight US Pacific Time. Accepted papers are intended for IEEE Xplore subject to its requirements.","notes":"A strong route for compact-model, simulation, reliability, PUF/TRNG, circuit, or device-to-system work; emphasize quality, design methodology, and quantitative validation.","verified":"2026-08-18","source_kind":"official","featured":true},{"id":"iedm-2026-regular","title":"IEEE International Electron Devices Meeting (IEDM 2026)","short_title":"IEDM 2026","type":"Conference","publisher":"IEEE Electron Devices Society","venue":"IEDM","deadline":"2026-07-16T23:59:00-07:00","event_date":"2026-12-12/2026-12-16","conference_rank":"Tier 1","conference_reputation":"Flagship","conference_rank_note":"Widely regarded as a flagship electron-devices conference; the tier is a curated assessment for this tracker, not an official ranking.","publication_date":"2026-12","status":"open","url":"https://ieee-iedm.org/submission-details/","submission_url":"https://iedm26.mapyourshow.com/","location":"San Francisco, California, USA","topics":["RRAM","Device physics","Compact modeling","Reliability","Fabrication","Emerging memory","Neuromorphic"],"fit_score":97,"fit_label":"Excellent fit","fit_reason":"Directly aligned with switching physics, emerging memories, reliability, process integration, modeling, and device–circuit interaction.","requirements":"Four-page camera-ready IEEE paper. Late-news submissions open August 3–18, 2026.","notes":"Best fit for genuinely new device, process, reliability, or physics results. The regular-paper deadline is very close.","verified":"2026-07-13","source_kind":"official","featured":true,"publisher_group":"IEEE","publisher_family":"IEEE Electron Devices Society","deadline_precision":"datetime"},{"id":"nmdc-2026","title":"IEEE Nanotechnology Materials and Devices Conference (NMDC 2026)","short_title":"IEEE-NMDC 2026","type":"Conference + journal route","publisher":"IEEE Nanotechnology Council","venue":"IEEE-NMDC","deadline":"2026-07-20T23:59:59-07:00","event_date":"2026-10-18/2026-10-21","conference_rank":"Tier 2","conference_reputation":"Specialized","conference_rank_note":"A reputable IEEE specialist venue for nanotechnology materials and devices; the tier is a curated assessment for this tracker.","publication_date":"2026","status":"open","url":"https://ieeenano.org/2026/ieee-nmdc-2026-call-for-papers/","submission_url":"https://ieeenano.org/2026/ieee-nmdc-2026-call-for-papers/","location":"TBD on official call page","topics":["RRAM","Nanomaterials","Device physics","Fabrication","Characterization","Emerging memory"],"fit_score":86,"fit_label":"Strong fit","fit_reason":"Good match for RRAM materials, nanoscale devices, fabrication, characterization, and emerging-memory results.","requirements":"Four-to-six-page full paper for IEEE Xplore consideration.","notes":"Selected conference papers are identified for special sections in IEEE Transactions on Nanotechnology and IEEE Open Journal of Nanotechnology.","verified":"2026-07-13","source_kind":"official","featured":true,"publisher_group":"IEEE","publisher_family":"IEEE Nanotechnology Council","deadline_precision":"datetime"},{"id":"elsevier-neuromorphic-quantum-materials-2026","title":"Next Generation Materials and Devices for Neuromorphic and Quantum Applications","short_title":"JACC: Neuromorphic Materials","type":"Special issue","publisher":"Journal of Alloys and Compounds Communications","publisher_group":"Elsevier","publisher_family":"ScienceDirect","venue":"Journal of Alloys and Compounds Communications","deadline":"2026-07-31T23:59:00-04:00","deadline_precision":"date","event_date":null,"publication_date":"continuous","status":"open","url":"https://www.sciencedirect.com/special-issue/323017/next-generation-materials-and-devices-for-neuromorphic-and-quantum-applications","submission_url":"https://www.sciencedirect.com/special-issue/323017/next-generation-materials-and-devices-for-neuromorphic-and-quantum-applications","location":"Online","journal_metrics":[{"journal":"Journal of Alloys and Compounds Communications","short_name":"JACC Communications","impact_factor":null,"impact_factor_year":null,"publication_speed":"Not publicly reported","source_url":"https://www.sciencedirect.com/journal/journal-of-alloys-and-compounds-communications"}],"topics":["RRAM","Neuromorphic","Device physics","Nanomaterials","Emerging memory","Fabrication","Characterization","Quantum devices"],"fit_score":88,"fit_label":"Strong fit","fit_reason":"The call targets next-generation materials and device designs for neuromorphic applications, making materials-driven RRAM and memristive-device studies relevant.","requirements":"Submit through the journal's Elsevier editorial system and select the named special issue. Confirm article type, formatting, and fee policy on the journal page.","notes":"Best for materials/device innovation and characterization; less direct for compact-model-only work. The official listing gives a date, so verify the exact submission cutoff and timezone.","verified":"2026-07-13","source_kind":"official","featured":true},{"id":"isscc-2027","title":"IEEE International Solid-State Circuits Conference (ISSCC 2027)","short_title":"ISSCC 2027","type":"Conference","publisher":"IEEE Solid-State Circuits Society","venue":"ISSCC","deadline":"2026-09-09T15:00:00-04:00","event_date":"2027-02-14/2027-02-18","conference_rank":"Tier 1","conference_reputation":"Flagship","conference_rank_note":"A flagship solid-state circuits conference with exceptionally high expectations for measured hardware; the tier is a curated assessment for this tracker.","publication_date":"2027-02","status":"open","url":"https://sscs.ieee.org/wp-content/uploads/ISSCC2027CFP.pdf","submission_url":"https://submissions.mirasmart.com/ISSCC2027","location":"San Francisco, California, USA","topics":["RRAM","In-memory computing","Memory circuits","AI hardware","Near-memory computing","Neuromorphic"],"fit_score":70,"fit_label":"Conditional fit","fit_reason":"The memory track explicitly includes resistive materials and IMC/NMC macros, but ISSCC expects strong circuit innovation and measured silicon or a working system.","requirements":"Quantitative abstract plus a blinded draft manuscript and separate figure PDF; experimental circuit evidence is normally essential.","notes":"Most suitable for a fabricated RRAM macro, peripheral circuit, accelerator, or measured chip—not a device-only or simulation-only paper.","verified":"2026-07-13","source_kind":"official","featured":true,"publisher_group":"IEEE","publisher_family":"IEEE Solid-State Circuits Society","deadline_precision":"datetime"},{"id":"aip-oxide-electronics-2026","title":"Design and Discovery in Oxide Electronics for Next-Generation Energy-Efficient Technologies","short_title":"AIP: Oxide Electronics","type":"Joint special topic","publisher":"APL Materials + APL Machine Learning","publisher_group":"AIP Publishing","publisher_family":"AIP Special Topics","venue":"APL Materials / APL Machine Learning","deadline":"2026-11-30T23:59:00-05:00","deadline_precision":"date","event_date":null,"publication_date":"continuous","status":"open","url":"https://publishing.aip.org/publications/journals/special-topics/apl-materials/festschrift-in-honor-of-judith-driscoll-design-and-discovery-in-oxide-electronics-for-next-generation-energy-efficient-technologies/","submission_url":"https://aplmaterials.peerx-press.org/","location":"Online","journal_metrics":[{"journal":"APL Materials","short_name":"APL Materials","impact_factor":4.5,"impact_factor_year":2025,"publication_speed":"107 days average, submission to publication","source_url":"https://publishing.aip.org/resources/topical-portfolios/materials-science/"},{"journal":"APL Machine Learning","short_name":"APL ML","impact_factor":4.1,"impact_factor_year":2025,"publication_speed":"116 days average, submission to publication","source_url":"https://publishing.aip.org/resources/topical-portfolios/explore-machine-learning-with-aip-publishing/"}],"topics":["RRAM","Oxide electronics","Memristor","Neuromorphic","Ionic transport","Interface engineering","Characterization","Machine learning"],"fit_score":95,"fit_label":"Excellent topical fit","fit_reason":"The scope explicitly includes memristive and neuromorphic devices, oxide defect/interface engineering, ionic transport, operando characterization, and semiconductor integration.","requirements":"Original research, review, or perspective. Materials-centered manuscripts go to APL Materials; machine-learning-centered manuscripts go to APL Machine Learning.","notes":"Well suited to TaOx/HfOx switching physics, oxygen-vacancy/interface studies, process–property relationships, and ML-guided oxide/device optimization. Verify the exact cutoff time on the submission system.","verified":"2026-07-13","source_kind":"official","featured":true},{"id":"npj-uc-imc-ai-2027","title":"In-Memory Computing for Artificial Intelligence Systems","short_title":"npj UC: IMC for AI","type":"Article collection","publisher":"npj Unconventional Computing","publisher_group":"Springer Nature","publisher_family":"Nature Portfolio · npj","venue":"npj Unconventional Computing","deadline":"2027-03-24T23:59:00-04:00","deadline_precision":"date","event_date":null,"publication_date":"continuous","status":"open","url":"https://www.nature.com/collections/gaggdejaib","submission_url":"https://www.nature.com/collections/gaggdejaib","location":"Online","journal_metrics":[{"journal":"npj Unconventional Computing","short_name":"npj UC","impact_factor":null,"impact_factor_year":null,"publication_speed":"156 days median, submission to acceptance","source_url":"https://www.nature.com/npjunconvcomput/journal-impact"}],"topics":["RRAM","In-memory computing","AI hardware","Emerging memory","Device-circuit co-design","Neuromorphic","FeFET","Selector devices"],"fit_score":99,"fit_label":"Exceptional fit","fit_reason":"The collection explicitly requests advances in RRAM, selector devices, memory-centric architectures, and hardware-oriented AI accelerators.","requirements":"Open collection in npj Unconventional Computing for original research articles or reviews. Check the journal's scope, article-processing charge, and collection instructions before submission.","notes":"A particularly strong route for MELISO/NeuroSim work connected to device-aware IMC, RRAM technology, selectors, architecture, or measured hardware. The official page publishes the date but not a universal timezone cutoff.","verified":"2026-07-13","source_kind":"official","featured":true},{"id":"memrisys-2026-joint-si","title":"MEMRISYS 2026 Joint Special Issue","short_title":"MEMRISYS Joint SI","type":"Post-conference special issue","publisher":"Advanced Electronic Materials + Advanced Physics Research","venue":"MEMRISYS 2026","deadline":null,"event_date":"2026-10-05/2026-10-08","conference_rank":"Tier 3","conference_reputation":"Emerging specialist","conference_rank_note":"A focused memristive-systems meeting with strong topical relevance but a shorter track record than the flagship IEEE venues; the tier is a curated assessment for this tracker.","publication_date":"2027","status":"watch","url":"https://www.memrisys2026.org/conference-scope","submission_url":"https://www.memrisys2026.org/conference-scope","location":"Darmstadt, Germany","journal_metrics":[{"journal":"Advanced Electronic Materials","short_name":"Adv. Electronic Materials","impact_factor":5.9,"impact_factor_year":2025,"publication_speed":"34 days median to first decision","source_url":"https://advanced.onlinelibrary.wiley.com/journal/2199160X"},{"journal":"Advanced Physics Research","short_name":"Adv. Physics Research","impact_factor":3.4,"impact_factor_year":2025,"publication_speed":"22 days median to first decision","source_url":"https://advanced.onlinelibrary.wiley.com/journal/27511200"}],"topics":["RRAM","Memristor","Device physics","Compact modeling","In-memory computing","Neuromorphic","EDA","CMOS integration"],"fit_score":95,"fit_label":"Excellent topical fit","fit_reason":"The conference and planned collection span memristive materials, devices, compact/EDA modeling, CMOS integration, accelerators, and neuromorphic systems.","requirements":"The joint special issue is described as a post-conference opportunity; eligibility and manuscript deadline have not yet been posted.","notes":"Track this source for the special-issue deadline. The 2026 conference abstract deadline has already passed.","verified":"2026-07-13","source_kind":"official","featured":false,"publisher_group":"Community / Wiley","publisher_family":"Conference-led journal collection","deadline_precision":"tba"},{"id":"mdpi-electronics-memristor-2026","title":"Memristor Device and Memristive System","short_title":"Electronics: Memristor Devices","type":"Special issue","publisher":"Electronics (MDPI)","venue":"Electronics","deadline":"2026-04-15T23:59:59+02:00","event_date":null,"publication_date":"continuous","status":"closed","url":"https://www.mdpi.com/journal/electronics/special_issues/M88VVLYHM4","submission_url":"https://www.mdpi.com/journal/electronics/special_issues/M88VVLYHM4","location":"Online","journal_metrics":[{"journal":"Electronics","short_name":"Electronics","impact_factor":2.9,"impact_factor_year":2025,"publication_speed":"37 days median publication time","source_url":"https://www.mdpi.com/journal/electronics/stats"}],"topics":["RRAM","Memristor","Compact modeling","In-memory computing","Neuromorphic","Spiking neural networks"],"fit_score":91,"fit_label":"Excellent topical fit","fit_reason":"Explicitly solicited ReRAM, theoretical device models, memristive circuits, IMC, and neuromorphic applications.","requirements":"Open-access journal submission; APC and journal-selection considerations apply.","notes":"Archived example retained so the tracker can learn recurring terminology and related calls.","verified":"2026-07-13","source_kind":"official","featured":false,"publisher_group":"MDPI","publisher_family":"MDPI Journals","deadline_precision":"datetime"},{"id":"jxcdc-3d-ai-2026","title":"3D Heterogeneous Integration for Energy-Efficient AI Systems","short_title":"JxCDC: 3D AI Integration","type":"Special topic","publisher":"IEEE JxCDC","venue":"IEEE Journal on Exploratory Solid-State Computational Devices and Circuits","deadline":"2026-05-31T23:59:59-04:00","event_date":null,"publication_date":"2026-08-01","status":"closed","url":"https://sscs.ieee.org/publications/ieee-journal-on-exploratory-solid-state-computational-devices-and-circuits-jcdc/special-issues/special-topic-on-3d-heterogeneous-integration-for-energy-efficient-ai-systems/","submission_url":"https://sscs.ieee.org/publications/ieee-journal-on-exploratory-solid-state-computational-devices-and-circuits-jcdc/special-issues/special-topic-on-3d-heterogeneous-integration-for-energy-efficient-ai-systems/","location":"Online","journal_metrics":[{"journal":"IEEE Journal on Exploratory Solid-State Computational Devices and Circuits","short_name":"IEEE JxCDC","impact_factor":2.7,"impact_factor_year":2024,"publication_speed":"Not publicly reported","source_url":"https://open.ieee.org/wp-content/uploads/IEEE-Title-List-August-2025.pdf"}],"topics":["In-memory computing","AI hardware","3D integration","Emerging memory","DTCO","FTCO"],"fit_score":79,"fit_label":"Strong adjacent fit","fit_reason":"Relevant to RRAM-based IMC, heterogeneous integration, and cross-layer technology–architecture optimization.","requirements":"JxCDC special-topic manuscript within the journal's scope and formatting rules.","notes":"Closed, but the source is worth monitoring because JxCDC regularly launches emerging-device and nontraditional-computing topics.","verified":"2026-07-13","source_kind":"official","featured":false,"publisher_group":"IEEE","publisher_family":"IEEE SSCS / IEEE JxCDC","deadline_precision":"datetime"}],"sources":[{"name":"IEEE Electron Devices Society publication network","url":"https://eds.ieee.org/publications","publisher":"IEEE Electron Devices Society","publisher_group":"IEEE","publisher_family":"IEEE EDS","scope":"Recursive journal and special-issue network","keywords":["RRAM","ReRAM","memristor","resistive switching","emerging memory","in-memory computing","neuromorphic","compact modeling","reliability","semiconductor devices","electron devices","materials for electron devices","semiconductor manufacturing","flexible electronics"],"crawler":"recursive","crawl_depth":3,"max_pages":140,"allowed_domains":["eds.ieee.org"],"follow_patterns":["/publications","call[-_/ ]?for[-_/ ]?papers","special[-_/ ]?(issue|section|topic)","transactions-on-","journal-of-","open-journal"],"follow_exclude_patterns":["/editor","/advisory","/publications-office","/information-for-authors","/guidelines","/newsletter","\\.pdf$"],"min_hits":1,"coverage":"TED, EDL/J-EDS, TDMR, T-SM, T-MAT, J-FLEX, OJ-ED and other EDS publication pages"},{"name":"IEEE Circuits and Systems active calls","url":"https://ieee-cas.org/active-calls","publisher":"IEEE Circuits and Systems Society","publisher_group":"IEEE","publisher_family":"IEEE CASS","scope":"Recursive active-call and journal network","keywords":["RRAM","ReRAM","memristor","resistive switching","emerging memory","in-memory computing","neuromorphic","compact modeling","reliability","semiconductor devices","analog computing","VLSI","AI circuits","emerging circuits"],"crawler":"recursive","crawl_depth":3,"max_pages":110,"allowed_domains":["ieee-cas.org"],"follow_patterns":["active-calls","call[-_/ ]?for[-_/ ]?papers","/publication/","JETCAS","OJCAS","TCAS","TVLSI","neuromorphic","in-memory"],"follow_exclude_patterns":["nomination","call-for-bids","awards?","election","webinar"],"min_hits":1,"coverage":"JETCAS, OJCAS, TCAS, TVLSI, ISCAS/AICAS and relevant CASS calls"},{"name":"IEEE Solid-State Circuits publication network","url":"https://sscs.ieee.org/publications/","publisher":"IEEE Solid-State Circuits Society","publisher_group":"IEEE","publisher_family":"IEEE SSCS","scope":"Recursive journal special-topic network","keywords":["RRAM","ReRAM","memristor","resistive switching","emerging memory","in-memory computing","neuromorphic","compact modeling","reliability","semiconductor devices","solid-state circuits","non-traditional computing","AI systems","compute-in-memory"],"crawler":"recursive","crawl_depth":3,"max_pages":90,"allowed_domains":["sscs.ieee.org"],"follow_patterns":["/publications/","special[-_/ ]?(issue|section|topic)","JxCDC","JSSC","OJ-SSCS","call[-_/ ]?for[-_/ ]?papers"],"follow_exclude_patterns":["/editor","/submission","/prepublication","/wiley","/magazine"],"min_hits":1,"coverage":"JxCDC, JSSC, OJ-SSCS and SSCS special topics/sections"},{"name":"IEEE Reliability Society special sections","url":"https://rs.ieee.org/publications/transactions-on-reliability/special-sections.html","publisher":"IEEE Transactions on Reliability","publisher_group":"IEEE","publisher_family":"IEEE Reliability Society","scope":"Reliability special-section network","keywords":["RRAM","ReRAM","memristor","resistive switching","emerging memory","in-memory computing","neuromorphic","compact modeling","reliability","semiconductor devices","device reliability","failure physics","reliability modeling"],"crawler":"recursive","crawl_depth":2,"max_pages":40,"allowed_domains":["rs.ieee.org"],"follow_patterns":["special[-_/ ]?sections?","call[-_/ ]?for[-_/ ]?papers","/publications/"],"min_hits":1,"coverage":"Transactions on Reliability special sections and linked calls"},{"name":"IEEE Nanotechnology Council calls","url":"https://ieeenano.org/category/call-for-papers/","publisher":"IEEE Nanotechnology Council","publisher_group":"IEEE","publisher_family":"IEEE Nanotechnology Council","scope":"Recursive nanotechnology CFP network","keywords":["RRAM","ReRAM","memristor","resistive switching","emerging memory","in-memory computing","neuromorphic","compact modeling","reliability","semiconductor devices","nanomaterials","nanoelectronics","nanodevices"],"crawler":"recursive","crawl_depth":2,"max_pages":70,"allowed_domains":["ieeenano.org"],"follow_patterns":["call-for-papers","/category/","transactions","open-journal","conference"],"follow_exclude_patterns":["award","nomination","webinar"],"min_hits":1,"coverage":"T-NANO, Open Journal of Nanotechnology, IEEE NANO/NMDC and related calls"},{"name":"IEEE Computer Society calls for papers","url":"https://www.computer.org/publications/author-resources/calls-for-papers","publisher":"IEEE Computer Society","publisher_group":"IEEE","publisher_family":"IEEE Computer Society","scope":"Computer Society journal CFP network","keywords":["RRAM","ReRAM","memristor","resistive switching","emerging memory","in-memory computing","neuromorphic","compact modeling","reliability","semiconductor devices","memory systems","AI hardware","accelerator","emerging technology"],"crawler":"recursive","crawl_depth":2,"max_pages":80,"allowed_domains":["computer.org"],"follow_patterns":["calls?-for-papers","special[-_/ ]?(issue|section)","/publications/"],"follow_exclude_patterns":["conference","education","awards?"],"min_hits":1,"coverage":"Computer Society transactions, magazines and special issues"},{"name":"IEEE Access open special sections","url":"https://ieeeaccess.ieee.org/sections/special-sections/","publisher":"IEEE Access","publisher_group":"IEEE","publisher_family":"IEEE Access","scope":"Open multidisciplinary special sections","keywords":["RRAM","ReRAM","memristor","resistive switching","emerging memory","in-memory computing","neuromorphic","compact modeling","reliability","semiconductor devices","AI hardware","nanoelectronics","materials","memory systems"],"crawler":"recursive","crawl_depth":2,"max_pages":60,"allowed_domains":["ieeeaccess.ieee.org"],"follow_patterns":["special-sections","call[-_/ ]?for[-_/ ]?papers","/sections/"],"follow_exclude_patterns":["closed-special-sections","/authors/","/editorial-team/"],"min_hits":1,"coverage":"All currently open IEEE Access Special Sections"},{"name":"IEEE Industry Applications open calls","url":"https://ias.ieee.org/publications/open-calls-for-papers/","publisher":"IEEE Industry Applications Society","publisher_group":"IEEE","publisher_family":"IEEE IAS","scope":"Open calls and special issues","keywords":["RRAM","ReRAM","memristor","resistive switching","emerging memory","in-memory computing","neuromorphic","compact modeling","reliability","semiconductor devices","industrial electronics","power electronics","reliability"],"crawler":"recursive","crawl_depth":2,"max_pages":45,"allowed_domains":["ias.ieee.org"],"follow_patterns":["open-calls-for-papers","special[-_/ ]?issue","/publications/"],"follow_exclude_patterns":["/editor","/information-for-authors"],"min_hits":1,"coverage":"IAS journals and co-sponsored publication calls"},{"name":"IEEE Electronics Packaging Society network","url":"https://eps.ieee.org/","publisher":"IEEE Electronics Packaging Society","publisher_group":"IEEE","publisher_family":"IEEE EPS","scope":"Packaging, integration and reliability calls","keywords":["RRAM","ReRAM","memristor","resistive switching","emerging memory","in-memory computing","neuromorphic","compact modeling","reliability","semiconductor devices","3D integration","heterogeneous integration","advanced packaging","chiplet","interconnect reliability"],"crawler":"recursive","crawl_depth":2,"max_pages":55,"allowed_domains":["eps.ieee.org"],"follow_patterns":["call[-_/ ]?for[-_/ ]?papers","/publications","/conferences","special[-_/ ]?issue"],"follow_exclude_patterns":["/education","/awards","/membership","/about"],"min_hits":1,"coverage":"EPS journals, newsletters and integration/packaging conference calls"},{"name":"IEEE Computational Intelligence publication network","url":"https://cis.ieee.org/publications","publisher":"IEEE Computational Intelligence Society","publisher_group":"IEEE","publisher_family":"IEEE CIS","scope":"Neuromorphic and computational-intelligence calls","keywords":["RRAM","ReRAM","memristor","resistive switching","emerging memory","in-memory computing","neuromorphic","compact modeling","reliability","semiconductor devices","computational intelligence","neural hardware","brain-inspired"],"crawler":"recursive","crawl_depth":2,"max_pages":55,"allowed_domains":["cis.ieee.org"],"follow_patterns":["/publications","special[-_/ ]?(issue|section)","call[-_/ ]?for[-_/ ]?papers"],"follow_exclude_patterns":["/editor","/awards","/education"],"min_hits":1,"coverage":"CIS transactions and special issues relevant to neuromorphic hardware"},{"name":"Nature Portfolio journals A–Z crawler","url":"https://www.nature.com/siteindex","publisher":"Nature Portfolio","publisher_group":"Springer Nature","publisher_family":"Nature Portfolio · Communications · npj","scope":"Portfolio-wide journal catalog crawler","keywords":["RRAM","memristor","resistive switching","in-memory computing","neuromorphic","semiconductor","electronic materials","oxide electronics","emerging memory"],"crawler":"nature_catalog","max_journals":320,"workers":5,"min_hits":1,"coverage":"Discovers every journal on Nature Journals A–Z, then checks its calls-for-papers or collections page"},{"name":"Springer journals A–Z crawler","url":"https://link.springer.com/journals","publisher":"Springer","publisher_group":"Springer Nature","publisher_family":"Springer Nature Link","scope":"Portfolio-wide relevant-journal catalog crawler","keywords":["RRAM","memristor","resistive switching","in-memory computing","neuromorphic","semiconductor devices","electronic materials","oxide electronics","emerging memory","compact modeling"],"crawler":"springer_catalog","max_pages_per_letter":15,"max_journals":450,"workers":6,"min_hits":1,"journal_title_keywords":["electronics","semiconductor","materials","nanotechnology","applied physics","circuits","hardware","reliability","manufacturing"],"coverage":"Enumerates Springer Journals A–Z, selects electronics/materials/device/computing journals, then checks collections and journal updates"},{"name":"Springer Nature collections gateway","url":"https://www.springernature.com/gp/authors/publish-an-article/collections","publisher":"Springer Nature","publisher_group":"Springer Nature","publisher_family":"Springer · Nature Portfolio · BMC · Discover","scope":"Cross-portfolio collections gateway","keywords":["memory","nanoelectronics","materials","neuromorphic","artificial intelligence","semiconductor"],"crawler":"recursive","crawl_depth":2,"max_pages":70,"allowed_domains":["springernature.com","nature.com","link.springer.com"],"follow_patterns":["collections?","call[-_/ ]?for[-_/ ]?papers","special[-_/ ]?issues?"],"min_hits":2,"coverage":"Cross-journal and portfolio collections promoted by Springer Nature"},{"name":"Nature Portfolio collection directory","url":"https://www.nature.com/collections","publisher":"Nature Portfolio","publisher_group":"Springer Nature","publisher_family":"Nature Portfolio","scope":"Cross-journal collection directory","keywords":["memory","nanoelectronics","materials","neuromorphic","computing","semiconductor","electronics"],"crawler":"recursive","crawl_depth":2,"max_pages":100,"allowed_domains":["nature.com"],"follow_patterns":["/collections","calls?-for-papers","page="],"min_hits":2,"coverage":"Nature Portfolio collection directory and collection detail pages"},{"name":"Nature Communications calls for papers","url":"https://www.nature.com/ncomms/calls-for-papers","publisher":"Nature Communications","publisher_group":"Springer Nature","publisher_family":"Nature Portfolio","scope":"High-priority multidisciplinary journal hub","keywords":["memory","electronic materials","neuromorphic","computing","semiconductor","nanotechnology"],"crawler":"recursive","crawl_depth":2,"max_pages":80,"allowed_domains":["nature.com"],"follow_patterns":["calls-for-papers","/collections/","page="],"min_hits":1,"coverage":"All open Nature Communications calls and linked collections"},{"name":"Scientific Reports calls for papers","url":"https://www.nature.com/srep/calls-for-papers","publisher":"Scientific Reports","publisher_group":"Springer Nature","publisher_family":"Nature Portfolio","scope":"Broad multidisciplinary collection hub","keywords":["memory","electronic materials","neuromorphic","computing","semiconductor","nanotechnology"],"crawler":"recursive","crawl_depth":2,"max_pages":80,"allowed_domains":["nature.com"],"follow_patterns":["calls-for-papers","/collections/","page="],"min_hits":1,"coverage":"All open Scientific Reports calls and linked collections"},{"name":"npj Unconventional Computing calls","url":"https://www.nature.com/npjunconvcomput/calls-for-papers","publisher":"npj Unconventional Computing","publisher_group":"Springer Nature","publisher_family":"npj / Nature Portfolio","scope":"High-priority unconventional-computing hub","keywords":["RRAM","memristor","in-memory computing","neuromorphic","emerging devices"],"crawler":"recursive","crawl_depth":2,"max_pages":35,"allowed_domains":["nature.com"],"follow_patterns":["calls-for-papers","/collections/"],"min_hits":1,"coverage":"All npj Unconventional Computing calls and collections"},{"name":"npj Flexible Electronics calls","url":"https://www.nature.com/npjflexelectron/calls-for-papers","publisher":"npj Flexible Electronics","publisher_group":"Springer Nature","publisher_family":"npj / Nature Portfolio","scope":"Flexible and emerging electronics hub","keywords":["memristor","memory","flexible electronics","oxide","neuromorphic","sensors"],"crawler":"recursive","crawl_depth":2,"max_pages":35,"allowed_domains":["nature.com"],"follow_patterns":["calls-for-papers","/collections/"],"min_hits":1,"coverage":"All npj Flexible Electronics calls and collections"},{"name":"AIP Upcoming Special Topics","url":"https://publishing.aip.org/publications/journals/special-topics/","publisher":"AIP Publishing","publisher_group":"AIP Publishing","publisher_family":"AIP Journals","scope":"Publisher special-topic hub","min_hits":1,"keywords":["memristive","oxide electronics","neuromorphic","materials","machine learning"]},{"name":"Journal of Applied Physics Special Topics","url":"https://publishing.aip.org/publications/journals/special-topics/jap/","publisher":"Journal of Applied Physics","publisher_group":"AIP Publishing","publisher_family":"AIP Journals","scope":"Targeted journal hub","min_hits":1,"keywords":["memory","switching","device physics","oxide","neuromorphic"]},{"name":"Applied Physics Letters Special Topics","url":"https://publishing.aip.org/publications/journals/special-topics/apl/","publisher":"Applied Physics Letters","publisher_group":"AIP Publishing","publisher_family":"AIP Journals","scope":"Targeted journal hub","min_hits":1,"keywords":["memory","materials","devices","oxide","neuromorphic"]},{"name":"APL Materials Special Topics","url":"https://publishing.aip.org/publications/journals/special-topics/apl-materials/","publisher":"APL Materials","publisher_group":"AIP Publishing","publisher_family":"AIP Journals","scope":"High-priority journal hub","min_hits":1,"keywords":["oxide electronics","memristive","ionic transport","defects","interfaces"]},{"name":"APL Machine Learning Special Topics","url":"https://publishing.aip.org/publications/journals/special-topics/aml/","publisher":"APL Machine Learning","publisher_group":"AIP Publishing","publisher_family":"AIP Journals","scope":"Adjacent journal hub","min_hits":1,"keywords":["hardware AI","materials discovery","in-memory","neuromorphic","device modeling"]},{"name":"AIP Advances Special Topics","url":"https://publishing.aip.org/publications/journals/special-topics/adv/","publisher":"AIP Advances","publisher_group":"AIP Publishing","publisher_family":"AIP Journals","scope":"Broad journal hub","min_hits":1,"keywords":["memory","oxide","materials","neuromorphic","device"]},{"name":"ACM JETC Special Issue Calls","url":"https://dl.acm.org/journal/jetc/calls-for-papers","publisher":"ACM Transactions on Embedded Computing Systems","publisher_group":"ACM","publisher_family":"ACM Journals","scope":"Hardware and embedded systems CFP hub","min_hits":1,"keywords":["emerging technology","AI hardware","memory","accelerator","sustainable computing"]},{"name":"ACM TODAES Calls for Special Issues","url":"https://dl.acm.org/journal/todaes/calls-for-papers","publisher":"ACM Transactions on Design Automation of Electronic Systems","publisher_group":"ACM","publisher_family":"ACM Journals","scope":"EDA and design CFP hub","min_hits":1,"keywords":["EDA","hardware AI","device-circuit","emerging technology","reliability"]},{"name":"ACM TECS Special Issue Calls","url":"https://dl.acm.org/journal/tecs/calls-for-papers","publisher":"ACM Transactions on Embedded Computing Systems","publisher_group":"ACM","publisher_family":"ACM Journals","scope":"Embedded systems CFP hub","min_hits":1,"keywords":["edge AI","accelerator","memory","energy efficient","neuromorphic"]},{"name":"ACM TOS Calls for Papers","url":"https://dl.acm.org/journal/tos/call-for-papers","publisher":"ACM Transactions on Storage","publisher_group":"ACM","publisher_family":"ACM Journals","scope":"Storage systems CFP hub","min_hits":1,"keywords":["nonvolatile memory","storage-class memory","emerging memory","reliability","systems"]},{"name":"ScienceDirect Calls for Papers","url":"https://www.sciencedirect.com/browse/calls-for-papers","publisher":"Elsevier","publisher_group":"Elsevier","publisher_family":"ScienceDirect","scope":"Publisher-wide CFP directory","min_hits":2,"keywords":["memristor","neuromorphic","emerging memory","nanoelectronics","in-memory"]},{"name":"Microelectronics Reliability Calls","url":"https://www.sciencedirect.com/journal/microelectronics-reliability/about/call-for-papers","publisher":"Microelectronics Reliability","publisher_group":"Elsevier","publisher_family":"ScienceDirect","scope":"High-priority journal hub","min_hits":1,"keywords":["reliability","variability","memory","failure","modeling"]},{"name":"Integration Calls for Papers","url":"https://www.sciencedirect.com/journal/integration/about/call-for-papers","publisher":"Integration, the VLSI Journal","publisher_group":"Elsevier","publisher_family":"ScienceDirect","scope":"Circuits and systems CFP hub","min_hits":1,"keywords":["in-memory","AI hardware","memory circuit","accelerator","VLSI"]},{"name":"Microelectronic Engineering Calls","url":"https://www.sciencedirect.com/journal/microelectronic-engineering/about/call-for-papers","publisher":"Microelectronic Engineering","publisher_group":"Elsevier","publisher_family":"ScienceDirect","scope":"Process and device CFP hub","min_hits":1,"keywords":["fabrication","memory","nanodevice","materials","integration"]},{"name":"Journal of Alloys and Compounds Communications Calls","url":"https://www.sciencedirect.com/journal/journal-of-alloys-and-compounds-communications/about/call-for-papers","publisher":"Journal of Alloys and Compounds Communications","publisher_group":"Elsevier","publisher_family":"ScienceDirect","scope":"Materials CFP hub","min_hits":1,"keywords":["neuromorphic","memory","quantum","functional materials","device"]},{"name":"ACS Axial calls for papers","url":"https://axial.acs.org/collection/call-for-papers","publisher":"American Chemical Society","publisher_group":"American Chemical Society","publisher_family":"ACS Publications / ACS Axial","scope":"Publisher-wide official call directory, including electronic and functional materials","crawler":"site_search","search_url":"https://axial.acs.org/?s={query}","search_queries":["call for papers memristor","call for papers resistive switching","call for papers in-memory computing","call for papers neuromorphic device","call for papers ferroelectric memory","call for papers electronic memory","call for papers oxide electronics"],"max_results_per_query":12,"allowed_domains":["axial.acs.org"],"include_patterns":["rram|reram|memrist|resistive.switch|in.memory|neuromorph|ferroelectric|memory.device|oxide.electronic"],"min_hits":1,"keywords":["RRAM","memristor","resistive switching","electronic materials","memory device","neuromorphic","oxide semiconductor","thin film","nanoelectronics","heterogeneous integration"]},{"name":"MDPI Electronics open Special Issues","url":"https://www.mdpi.com/journal/electronics/special_issues?hideClose=1","publisher":"Electronics","publisher_group":"MDPI","publisher_family":"MDPI Electronics","scope":"Open calls in memory devices, circuits, neuromorphic systems, and AI hardware","crawler":"recursive","crawl_depth":1,"max_pages":18,"allowed_domains":["mdpi.com"],"follow_patterns":["page_no="],"follow_exclude_patterns":["special_issue_flyer","/pdf","/stats"],"self_candidate":false,"include_patterns":["rram|reram|memrist|resistive.switch|in.memory|neuromorph|ferroelectric|fefet|phase.change|mram|compact.model|oxide.electronic"],"min_hits":1,"keywords":["RRAM","memristor","emerging memory","in-memory computing","neuromorphic","semiconductor device","compact model"]},{"name":"MDPI Materials open Special Issues","url":"https://www.mdpi.com/journal/materials/special_issues?hideClose=1","publisher":"Materials","publisher_group":"MDPI","publisher_family":"MDPI Materials","scope":"Open calls in electronic materials, oxides, thin films, and characterization","crawler":"recursive","crawl_depth":1,"max_pages":18,"allowed_domains":["mdpi.com"],"follow_patterns":["page_no="],"follow_exclude_patterns":["special_issue_flyer","/pdf","/stats"],"self_candidate":false,"include_patterns":["rram|reram|memrist|resistive.switch|oxygen.vacanc|ionic.transport|hafnium.oxide|tantalum.oxide|oxide.electronic|memory.material|ferroelectric"],"min_hits":2,"keywords":["resistive switching","memory materials","oxide electronics","electronic materials","thin film","defect engineering"]},{"name":"MDPI Nanomaterials open Special Issues","url":"https://www.mdpi.com/journal/nanomaterials/special_issues?hideClose=1","publisher":"Nanomaterials","publisher_group":"MDPI","publisher_family":"MDPI Nanomaterials","scope":"Open calls in nanodevices, functional oxides, and nanoscale characterization","crawler":"recursive","crawl_depth":1,"max_pages":14,"allowed_domains":["mdpi.com"],"follow_patterns":["page_no="],"follow_exclude_patterns":["special_issue_flyer","/pdf","/stats"],"self_candidate":false,"include_patterns":["rram|reram|memrist|resistive.switch|oxygen.vacanc|ionic.transport|functional.oxide|oxide.electronic|memory.device|neuromorph"],"min_hits":2,"keywords":["memristor","nanodevice","functional oxide","nanoelectronics","neuromorphic","memory"]},{"name":"MDPI Micromachines open Special Issues","url":"https://www.mdpi.com/journal/micromachines/special_issues?hideClose=1","publisher":"Micromachines","publisher_group":"MDPI","publisher_family":"MDPI Micromachines","scope":"Open calls in micro/nanofabrication, semiconductor devices, and integration","crawler":"recursive","crawl_depth":1,"max_pages":12,"allowed_domains":["mdpi.com"],"follow_patterns":["page_no="],"follow_exclude_patterns":["special_issue_flyer","/pdf","/stats"],"self_candidate":false,"include_patterns":["rram|reram|memrist|resistive.switch|memory.device|in.memory|neuromorph|compact.model|oxide.electronic|ferroelectric"],"min_hits":2,"keywords":["microfabrication","nanofabrication","semiconductor device","memory","neuromorphic","integration"]},{"name":"ECS Journal focus issues","url":"https://www.electrochem.org/publications/focus-issues","publisher":"The Electrochemical Society","publisher_group":"The Electrochemical Society","publisher_family":"ECS Journals","scope":"Focus issues in solid-state devices, electronic materials, processing, and reliability","crawler":"recursive","crawl_depth":1,"max_pages":30,"allowed_domains":["electrochem.org"],"follow_patterns":["focus-issue","call-for-papers","solid-state"],"include_patterns":["rram|reram|memrist|resistive.switch|memory.device|emerging.memory|neuromorph|solid.state.electronic|semiconductor.device"],"min_hits":2,"keywords":["solid state device","electronic materials","dielectric","semiconductor","memory","reliability"]},{"name":"Wiley physica status solidi special issues","url":"https://onlinelibrary.wiley.com/page/journal/18626319/homepage/special-issues","publisher":"physica status solidi (a)","publisher_group":"Wiley","publisher_family":"Wiley-VCH","scope":"Special issues in semiconductor materials, nanoswitches, oxides, and device physics","crawler":"recursive","crawl_depth":1,"max_pages":24,"allowed_domains":["onlinelibrary.wiley.com"],"follow_patterns":["call-for-papers","special-issues","si-20"],"include_patterns":["rram|reram|memrist|resistive.switch|nanoswitch|memory.device|neuromorph|ferroelectric|oxide.electronic"],"min_hits":1,"keywords":["resistive switching","nanoswitch","semiconductor","functional oxide","ferroelectric","nanoelectronics"]},{"name":"IOP Publishing relevant journal network","url":"https://publishingsupport.iopscience.iop.org/publishing-support/journals/","publisher":"IOP Publishing","publisher_group":"IOP Publishing","publisher_family":"IOPscience","scope":"Semiconductor, nanotechnology, applied-physics, and neuromorphic journal network","crawler":"recursive","crawl_depth":1,"max_pages":45,"allowed_domains":["publishingsupport.iopscience.iop.org","iopscience.iop.org"],"follow_patterns":["semiconductor-science","nanotechnology","neuromorphic-computing","journal-of-physics-d","2d-materials","flexible-and-printed"],"include_patterns":["rram|reram|memrist|resistive.switch|memory.device|in.memory|neuromorph|oxide.electronic|ferroelectric"],"min_hits":2,"keywords":["memristive","semiconductor device","neuromorphic","nanoelectronics","electronic materials","memory"]},{"name":"IEEE IEDM recurring call","url":"https://ieee-iedm.org/call-for-papers/","publisher":"IEEE International Electron Devices Meeting","publisher_group":"IEEE","publisher_family":"IEEE Electron Devices Society","scope":"Flagship electron-device conference","crawler":"recursive","crawl_depth":1,"max_pages":20,"allowed_domains":["ieee-iedm.org"],"follow_patterns":["call-for-papers","submission","deadline"],"min_hits":1,"keywords":["emerging memory","resistive memory","device physics","process integration","modeling","reliability"]},{"name":"IEEE IRPS recurring call","url":"https://www.irps.org/","publisher":"IEEE International Reliability Physics Symposium","publisher_group":"IEEE","publisher_family":"IEEE Reliability Society / IEEE EDS","scope":"Microelectronics reliability, emerging-memory endurance, retention, and failure physics","crawler":"recursive","crawl_depth":1,"max_pages":24,"allowed_domains":["irps.org"],"follow_patterns":["call-for-papers","cfp","author","submission"],"min_hits":1,"keywords":["emerging memory reliability","RRAM","failure physics","variability","endurance","retention"]},{"name":"IEEE International Memory Workshop","url":"https://ewh.ieee.org/soc/eds/imw/","publisher":"IEEE International Memory Workshop","publisher_group":"IEEE","publisher_family":"IEEE Electron Devices Society","scope":"Memory materials, devices, circuits, processes, and systems","crawler":"recursive","crawl_depth":2,"max_pages":30,"allowed_domains":["ewh.ieee.org"],"follow_patterns":["imw20","call_for_papers","call-for-papers","submission"],"min_hits":1,"keywords":["RRAM","emerging memory","memory technology","memory process","memory design"]},{"name":"IEEE EDTM recurring call","url":"https://www.ieee-edtm.org/call/","publisher":"IEEE Electron Devices Technology and Manufacturing","publisher_group":"IEEE","publisher_family":"IEEE Electron Devices Society","scope":"Devices, materials, manufacturing, modeling, reliability, and advanced memory","crawler":"recursive","crawl_depth":1,"max_pages":22,"allowed_domains":["ieee-edtm.org"],"follow_patterns":["call","paper_submission","important-dates"],"min_hits":1,"keywords":["advanced memory","emerging materials","modeling and simulation","reliability","neuromorphic"]},{"name":"IEEE/JSAP VLSI Symposium recurring call","url":"https://www.vlsisymposium.org/","publisher":"Symposium on VLSI Technology and Circuits","publisher_group":"IEEE","publisher_family":"IEEE EDS / IEEE SSCS / JSAP","scope":"Memory technology, circuits, device physics, modeling, and integration","crawler":"recursive","crawl_depth":1,"max_pages":25,"allowed_domains":["vlsisymposium.org"],"follow_patterns":["call-for-papers","paper-submission","authors"],"min_hits":1,"keywords":["memory technologies","computing in memory","device physics","modeling","new compute"]},{"name":"IEEE NVMTS current call","url":"https://nvmts2026.jp/","publisher":"IEEE Non-Volatile Memory Technology Symposium","publisher_group":"IEEE","publisher_family":"IEEE Electron Devices Society","scope":"Dedicated RRAM, PCM, MRAM, FeRAM, selector, and computing-in-memory symposium","crawler":"recursive","crawl_depth":1,"max_pages":18,"allowed_domains":["nvmts2026.jp"],"follow_patterns":["call","submission","important"],"min_hits":1,"keywords":["RRAM","computing-in-memory","neuromorphic materials","selector","memory system"]},{"name":"DATE recurring call","url":"https://www.date-conference.com/date-2027-call-papers","publisher":"Design, Automation and Test in Europe","publisher_group":"ACM / IEEE / EDAA","publisher_family":"DATE Conference","scope":"Emerging memories, design automation, reliability, architectures, and hardware security","crawler":"recursive","crawl_depth":1,"max_pages":22,"allowed_domains":["date-conference.com"],"follow_patterns":["call-papers","submission","authors"],"min_hits":1,"keywords":["future memories","emerging technologies","variability","reliability","hardware security","machine learning architectures"]},{"name":"ASP-DAC current call","url":"https://www.aspdac.com/aspdac2027/cfp/","publisher":"Asia and South Pacific Design Automation Conference","publisher_group":"ACM / IEEE / EDAA","publisher_family":"ASP-DAC","scope":"Device-to-system design automation and emerging computing hardware","crawler":"recursive","crawl_depth":1,"max_pages":18,"allowed_domains":["aspdac.com"],"follow_patterns":["cfp","submission","authors"],"min_hits":1,"keywords":["emerging device","memory architecture","AI hardware","neuromorphic","design technology"]},{"name":"IEEE ISCAS current call","url":"https://2027.ieee-iscas.org/","publisher":"IEEE International Symposium on Circuits and Systems","publisher_group":"IEEE","publisher_family":"IEEE Circuits and Systems Society","scope":"Circuits, in-memory computing, neuromorphic systems, and AI accelerators","crawler":"recursive","crawl_depth":1,"max_pages":25,"allowed_domains":["2027.ieee-iscas.org"],"follow_patterns":["call-for-papers","technical-contributions","submission"],"min_hits":1,"keywords":["in-memory computing","memristive circuit","neuromorphic","AI accelerator","emerging technology"]},{"name":"SISPAD current call","url":"https://sispad2026.jp/","publisher":"International Conference on Simulation of Semiconductor Processes and Devices","publisher_group":"Community / Society","publisher_family":"SISPAD / IEEE EDS technical co-sponsor","scope":"Device, process, compact, circuit, and reliability modeling","crawler":"recursive","crawl_depth":1,"max_pages":18,"allowed_domains":["sispad2026.jp"],"follow_patterns":["call","submission","cfp"],"min_hits":1,"keywords":["emerging memory","neuromorphic device","compact modeling","device simulation","reliability"]},{"name":"ISQED current call","url":"https://www.isqed.org/English/Conference/Call_for_Papers.html","publisher":"International Symposium on Quality Electronic Design","publisher_group":"Community / Society","publisher_family":"ISQED","scope":"Semiconductor technology, device modeling, manufacturing, circuits, and AI hardware","crawler":"recursive","crawl_depth":1,"max_pages":15,"allowed_domains":["isqed.org"],"follow_patterns":["Call_for_Papers","submission","special_sessions"],"min_hits":1,"keywords":["device modeling","semiconductor technology","neuromorphic architecture","AI accelerator","reliability"]},{"name":"MEMRISYS","url":"https://www.memrisys2026.org/","publisher":"MEMRISYS community","publisher_group":"Community / Wiley","publisher_family":"Conference-led journal route","scope":"Memristor community conference","min_hits":1,"keywords":["memristor","RRAM","in-memory","neuromorphic","modeling"]}]};
+
+</script>
+  <script>
+(() => {
+  'use strict';
+
+  const dataset = window.RRAM_DATA || {};
+  const opportunities = dataset.opportunities || [];
+  const allProfileTopics = [
+    'RRAM', 'Device physics', 'Compact modeling', 'Reliability', 'Fabrication',
+    'In-memory computing', 'Device-circuit co-design', 'Oxide electronics'
+  ];
+  const defaultProfile = ['RRAM', 'Device physics', 'Compact modeling', 'Reliability', 'In-memory computing'];
+  const $ = (selector) => document.querySelector(selector);
+  const $$ = (selector) => [...document.querySelectorAll(selector)];
+
+  function storedSet(key, fallback) {
+    try {
+      const value = JSON.parse(localStorage.getItem(key) || JSON.stringify(fallback));
+      return new Set(Array.isArray(value) ? value : fallback);
+    } catch {
+      return new Set(fallback);
+    }
+  }
+
+  const state = {
+    query: '',
+    publisher: 'all',
+    type: 'all',
+    topic: 'all',
+    sort: 'personal',
+    showArchive: false,
+    favoritesOnly: false,
+    view: 'cards',
+    favorites: storedSet('rramFavorites', []),
+    profile: storedSet('rramProfile', defaultProfile)
+  };
+
+  const dateFmt = new Intl.DateTimeFormat(undefined, {year: 'numeric', month: 'short', day: 'numeric'});
+  const fullDateFmt = new Intl.DateTimeFormat(undefined, {
+    year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: '2-digit', timeZoneName: 'short'
+  });
+
+  function escapeHtml(value = '') {
+    return String(value).replace(/[&<>'"]/g, (character) => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
+    }[character]));
+  }
+
+  function deadlineDate(item) {
+    return item.deadline ? new Date(item.deadline) : null;
+  }
+
+  function liveStatus(item) {
+    const deadline = deadlineDate(item);
+    if (item.status === 'closed') return 'closed';
+    if (deadline && deadline.getTime() < Date.now()) return 'closed';
+    return item.status || 'watch';
+  }
+
+  function daysUntil(item) {
+    const deadline = deadlineDate(item);
+    return deadline ? Math.ceil((deadline - Date.now()) / 86400000) : null;
+  }
+
+  function deadlineText(item) {
+    const deadline = deadlineDate(item);
+    if (!deadline) return 'Deadline not announced';
+    return item.deadline_precision === 'date' ? dateFmt.format(deadline) : fullDateFmt.format(deadline);
+  }
+
+  function countdownText(item) {
+    const days = daysUntil(item);
+    if (days === null) return ['TBA', 'watch source'];
+    if (days < 0) return ['CLOSED', `${Math.abs(days)} days ago`];
+    if (days === 0) return ['TODAY', 'deadline'];
+    if (days === 1) return ['1 DAY', 'remaining'];
+    return [`${days} DAYS`, 'remaining'];
+  }
+
+  function personalizedFit(item) {
+    const matches = (item.topics || []).filter((topic) => state.profile.has(topic)).length;
+    const possible = Math.max(1, state.profile.size);
+    return Math.min(100, Math.round(item.fit_score * 0.72 + (matches / possible) * 28));
+  }
+
+  function statusLabel(status) {
+    return status === 'open' ? 'Open' : status === 'watch' ? 'Watch' : 'Closed';
+  }
+
+  function formatEventDate(value) {
+    if (!value) return 'Not announced';
+    const [startValue, endValue] = value.split('/');
+    const start = new Date(`${startValue}T12:00:00`);
+    if (!endValue) return dateFmt.format(start);
+    const end = new Date(`${endValue}T12:00:00`);
+    return `${dateFmt.format(start)} – ${dateFmt.format(end)}`;
+  }
+
+  function journalMetrics(item) {
+    return Array.isArray(item.journal_metrics) ? item.journal_metrics : [];
+  }
+
+  function impactFactorSummary(item) {
+    const metrics = journalMetrics(item);
+    if (!metrics.length) return '';
+    return metrics.map((metric) => {
+      const value = metric.impact_factor ?? 'Not assigned';
+      return metrics.length > 1 ? `${metric.short_name || metric.journal}: ${value}` : String(value);
+    }).join(' · ');
+  }
+
+  function impactFactorLabel(item) {
+    const years = [...new Set(journalMetrics(item).map((metric) => metric.impact_factor_year).filter(Boolean))];
+    return years.length === 1 ? `Impact factor (${years[0]})` : 'Impact factor';
+  }
+
+  function publicationSpeedSummary(item) {
+    const metrics = journalMetrics(item);
+    if (!metrics.length) return '';
+    return metrics.map((metric) => {
+      const value = metric.publication_speed || 'Not publicly reported';
+      return metrics.length > 1 ? `${metric.short_name || metric.journal}: ${value}` : value;
+    }).join(' · ');
+  }
+
+  function venueFactsHtml(item) {
+    const facts = [];
+    if (item.event_date || item.conference_rank) {
+      facts.push(`<div><small>CONFERENCE DATES</small><strong>${escapeHtml(formatEventDate(item.event_date))}</strong></div>`);
+    }
+    if (item.conference_rank) {
+      facts.push(`<div><small>CURATED REPUTATION</small><strong>${escapeHtml(item.conference_rank)} · ${escapeHtml(item.conference_reputation || '')}</strong></div>`);
+    }
+    if (journalMetrics(item).length) {
+      facts.push(`<div><small>${escapeHtml(impactFactorLabel(item).toUpperCase())}</small><strong>${escapeHtml(impactFactorSummary(item))}</strong></div>`);
+      facts.push(`<div><small>PUBLICATION SPEED</small><strong>${escapeHtml(publicationSpeedSummary(item))}</strong></div>`);
+    }
+    return facts.length ? `<div class="venue-facts">${facts.join('')}</div>` : '';
+  }
+
+  function venueSummaryHtml(item) {
+    if (item.event_date) {
+      const rank = item.conference_rank ? `<small>${escapeHtml(item.conference_rank)} · ${escapeHtml(item.conference_reputation || '')}</small>` : '';
+      return `<strong>${escapeHtml(formatEventDate(item.event_date))}</strong>${rank}`;
+    }
+    if (journalMetrics(item).length) {
+      return `<strong>IF ${escapeHtml(impactFactorSummary(item))}</strong><small>${escapeHtml(publicationSpeedSummary(item))}</small>`;
+    }
+    return '<small>See official source</small>';
+  }
+
+  function relevantText(item) {
+    return [
+      item.title, item.short_title, item.publisher, item.publisher_group, item.publisher_family,
+      item.venue, item.type, item.fit_reason, item.requirements, item.notes,
+      item.conference_rank, item.conference_reputation, impactFactorSummary(item),
+      ...(item.topics || [])
+    ].join(' ').toLowerCase();
+  }
+
+  function filteredItems() {
+    const result = opportunities.filter((item) => {
+      const status = liveStatus(item);
+      if (!state.showArchive && status !== 'open') return false;
+      if (state.favoritesOnly && !state.favorites.has(item.id)) return false;
+      if (state.publisher !== 'all' && item.publisher_group !== state.publisher) return false;
+      if (state.type !== 'all' && item.type !== state.type) return false;
+      if (state.topic !== 'all' && !(item.topics || []).includes(state.topic)) return false;
+      if (state.query && !relevantText(item).includes(state.query.toLowerCase())) return false;
+      return true;
+    });
+
+    result.sort((a, b) => {
+      if (state.sort === 'fit') return b.fit_score - a.fit_score;
+      if (state.sort === 'updated') return String(b.verified).localeCompare(String(a.verified));
+      if (state.sort === 'deadline') {
+        return (deadlineDate(a)?.getTime() ?? Number.MAX_SAFE_INTEGER) -
+          (deadlineDate(b)?.getTime() ?? Number.MAX_SAFE_INTEGER);
+      }
+      const fitDifference = personalizedFit(b) - personalizedFit(a);
+      if (fitDifference) return fitDifference;
+      return (deadlineDate(a)?.getTime() ?? Number.MAX_SAFE_INTEGER) -
+        (deadlineDate(b)?.getTime() ?? Number.MAX_SAFE_INTEGER);
+    });
+    return result;
+  }
+
+  function renderProfile() {
+    $('#profileTopics').innerHTML = allProfileTopics.map((topic) => (
+      `<button class="topic-pill ${state.profile.has(topic) ? 'active' : ''}" type="button" data-profile-topic="${escapeHtml(topic)}">${escapeHtml(topic)}</button>`
+    )).join('');
+    $$('[data-profile-topic]').forEach((button) => button.addEventListener('click', () => {
+      const topic = button.dataset.profileTopic;
+      state.profile.has(topic) ? state.profile.delete(topic) : state.profile.add(topic);
+      localStorage.setItem('rramProfile', JSON.stringify([...state.profile]));
+      renderProfile();
+      render();
+    }));
+  }
+
+  function publisherLine(item) {
+    const family = item.publisher_family ? ` · ${escapeHtml(item.publisher_family)}` : '';
+    return `<span class="publisher-chip">${escapeHtml(item.publisher_group)}</span><span>${escapeHtml(item.publisher)}${family}</span>`;
+  }
+
+  function cardHtml(item) {
+    const status = liveStatus(item);
+    const [count, unit] = countdownText(item);
+    const fit = personalizedFit(item);
+    return `<article class="opportunity-card">
+      <div class="card-top"><span class="status-badge status-${status}">${statusLabel(status)}</span><span class="type-label">${escapeHtml(item.type)}</span><button class="favorite-button ${state.favorites.has(item.id) ? 'active' : ''}" data-favorite="${item.id}" type="button" aria-label="Toggle favorite">${state.favorites.has(item.id) ? '★' : '☆'}</button></div>
+      <h2>${escapeHtml(item.short_title || item.title)}</h2>
+      <div class="publisher">${publisherLine(item)}</div>
+      <div class="deadline-row"><div><small>${status === 'closed' ? 'CLOSED DEADLINE' : item.deadline ? 'SUBMISSION DEADLINE' : 'DEADLINE STATUS'}</small><strong>${escapeHtml(deadlineText(item))}</strong></div><div class="countdown"><b>${escapeHtml(count)}</b><span>${escapeHtml(unit)}</span></div></div>
+      ${venueFactsHtml(item)}
+      <div class="fit-block"><span class="fit-score">${fit}</span><div><strong>${escapeHtml(item.fit_label)}</strong><p>${escapeHtml(item.fit_reason)}</p></div></div>
+      <div class="tag-list">${(item.topics || []).slice(0, 4).map((topic) => `<span class="tag">${escapeHtml(topic)}</span>`).join('')}${item.topics?.length > 4 ? `<span class="tag">+${item.topics.length - 4}</span>` : ''}</div>
+      <div class="card-actions"><button class="detail-button" data-details="${item.id}" type="button">Details</button><a class="source-button" href="${escapeHtml(item.url)}" target="_blank" rel="noreferrer">Official source ↗</a>${item.deadline ? `<button class="calendar-button" data-calendar="${item.id}" title="Add deadline to calendar" type="button">＋</button>` : ''}</div>
+    </article>`;
+  }
+
+  function tableRowHtml(item) {
+    const status = liveStatus(item);
+    return `<tr>
+      <td><strong>${escapeHtml(item.short_title || item.title)}</strong><small>${escapeHtml(item.publisher)}</small></td>
+      <td><span class="status-badge status-${status}">${statusLabel(status)}</span><small>${escapeHtml(item.type)}</small></td>
+      <td><strong>${escapeHtml(item.deadline ? dateFmt.format(deadlineDate(item)) : 'TBA')}</strong><small>${escapeHtml(countdownText(item).join(' '))}</small></td>
+      <td>${venueSummaryHtml(item)}</td>
+      <td><span class="fit-score">${personalizedFit(item)}</span><small>${escapeHtml(item.fit_label)}</small></td>
+      <td><button class="detail-button" data-details="${item.id}" type="button">Details</button></td>
+    </tr>`;
+  }
+
+  function bindResultActions() {
+    $$('[data-favorite]').forEach((button) => button.addEventListener('click', () => {
+      const id = button.dataset.favorite;
+      state.favorites.has(id) ? state.favorites.delete(id) : state.favorites.add(id);
+      localStorage.setItem('rramFavorites', JSON.stringify([...state.favorites]));
+      render();
+    }));
+    $$('[data-details]').forEach((button) => button.addEventListener('click', () => openDetails(button.dataset.details)));
+    $$('[data-calendar]').forEach((button) => button.addEventListener('click', () => {
+      downloadIcs(opportunities.find((item) => item.id === button.dataset.calendar));
+    }));
+  }
+
+  function activeFilterSummary() {
+    const parts = [state.showArchive ? 'open, watch list & archive' : 'open calls only'];
+    if (state.publisher !== 'all') parts.push(state.publisher);
+    if (state.type !== 'all') parts.push(state.type);
+    if (state.topic !== 'all') parts.push(state.topic);
+    if (state.favoritesOnly) parts.push('favorites');
+    return parts.join(' · ');
+  }
+
+  function render() {
+    const items = filteredItems();
+    $('#resultCount').textContent = `${items.length} opportunit${items.length === 1 ? 'y' : 'ies'}`;
+    $('#activeFilterText').textContent = activeFilterSummary();
+    $('#cardsView').innerHTML = items.map(cardHtml).join('');
+    $('#tableBody').innerHTML = items.map(tableRowHtml).join('');
+    $('#emptyState').classList.toggle('hidden', items.length > 0);
+    $('#cardsView').classList.toggle('hidden', state.view !== 'cards' || !items.length);
+    $('#tableView').classList.toggle('hidden', state.view !== 'table' || !items.length);
+    bindResultActions();
+  }
+
+  function metricSourcesHtml(item) {
+    const links = journalMetrics(item).filter((metric) => metric.source_url).map((metric) => (
+      `<a href="${escapeHtml(metric.source_url)}" target="_blank" rel="noreferrer">${escapeHtml(metric.short_name || metric.journal)} metrics ↗</a>`
+    ));
+    return links.length ? `<div class="metric-sources">${links.join('')}</div>` : '';
+  }
+
+  function openDetails(id) {
+    const item = opportunities.find((entry) => entry.id === id);
+    if (!item) return;
+    const status = liveStatus(item);
+    const fit = personalizedFit(item);
+    const eventOrPublication = item.event_date ? formatEventDate(item.event_date) : (item.publication_date || 'Continuous');
+    const reputation = item.conference_rank ? `<div class="dialog-section"><h3>Conference reputation</h3><p><strong>${escapeHtml(item.conference_rank)} · ${escapeHtml(item.conference_reputation || '')}</strong> — ${escapeHtml(item.conference_rank_note || 'Curated for this tracker; not an official ranking.')}</p></div>` : '';
+    const metrics = journalMetrics(item).length ? `<div class="dialog-section"><h3>Journal metrics</h3>${journalMetrics(item).map((metric) => `<div class="journal-metric"><strong>${escapeHtml(metric.journal)}</strong><span>Impact factor: ${escapeHtml(metric.impact_factor ?? 'Not assigned')}${metric.impact_factor_year ? ` (${escapeHtml(metric.impact_factor_year)})` : ''}</span><span>Publication speed: ${escapeHtml(metric.publication_speed || 'Not publicly reported')}</span></div>`).join('')}${metricSourcesHtml(item)}<p class="metric-note">Publisher-reported metrics change over time and should not be treated as a complete measure of journal quality.</p></div>` : '';
+    $('#dialogContent').innerHTML = `<div class="dialog-inner"><span class="status-badge status-${status}">${statusLabel(status)}</span><h2>${escapeHtml(item.title)}</h2><div class="dialog-meta"><span class="publisher-chip">${escapeHtml(item.publisher_group)}</span><span>${escapeHtml(item.publisher)}${item.publisher_family ? ` · ${escapeHtml(item.publisher_family)}` : ''}</span><span>Verified ${escapeHtml(item.verified)}</span></div>
+      <div class="dialog-grid"><div class="dialog-stat"><small>SUBMISSION DEADLINE</small><strong>${escapeHtml(deadlineText(item))}</strong></div><div class="dialog-stat"><small>PERSONALIZED FIT</small><strong>${fit}/100 · ${escapeHtml(item.fit_label)}</strong></div><div class="dialog-stat"><small>EVENT / PUBLICATION</small><strong>${escapeHtml(eventOrPublication)}</strong></div><div class="dialog-stat"><small>LOCATION</small><strong>${escapeHtml(item.location || 'Online / not specified')}</strong></div></div>
+      ${reputation}${metrics}
+      <div class="dialog-section"><h3>Why it matches</h3><p>${escapeHtml(item.fit_reason || '—')}</p></div><div class="dialog-section"><h3>Submission shape</h3><p>${escapeHtml(item.requirements || 'See the official source for article types and requirements.')}</p></div><div class="dialog-section"><h3>Researcher note</h3><p>${escapeHtml(item.notes || '—')}</p></div><div class="tag-list">${(item.topics || []).map((topic) => `<span class="tag">${escapeHtml(topic)}</span>`).join('')}</div>
+      <div class="dialog-actions"><a href="${escapeHtml(item.url)}" target="_blank" rel="noreferrer">Open official source ↗</a>${item.deadline ? `<button type="button" data-dialog-calendar="${item.id}">Add deadline to calendar</button>` : ''}</div></div>`;
+    $('#detailDialog').showModal();
+    const calendarButton = $('[data-dialog-calendar]');
+    if (calendarButton) calendarButton.addEventListener('click', () => downloadIcs(item));
+  }
+
+  function icsDate(value) {
+    return value.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
+  }
+
+  function downloadIcs(item) {
+    if (!item?.deadline) return;
+    const due = new Date(item.deadline);
+    const start = new Date(due.getTime() - 30 * 60000);
+    const safe = (value) => String(value || '').replace(/([,;\\])/g, '\\$1').replace(/\n/g, '\\n');
+    const content = [
+      'BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//RRAM Opportunity Tracker//EN', 'BEGIN:VEVENT',
+      `UID:${item.id}@rram-opportunity-tracker`, `DTSTAMP:${icsDate(new Date())}`,
+      `DTSTART:${icsDate(start)}`, `DTEND:${icsDate(due)}`,
+      `SUMMARY:${safe(item.short_title || item.title)} submission deadline`,
+      `DESCRIPTION:${safe(item.publisher_group)} — ${safe(item.notes)}\\n${safe(item.url)}`,
+      `URL:${item.url}`, 'END:VEVENT', 'END:VCALENDAR'
+    ].join('\r\n');
+    downloadBlob(content, `${item.id}-deadline.ics`, 'text/calendar;charset=utf-8');
+  }
+
+  function downloadBlob(content, name, type) {
+    const anchor = document.createElement('a');
+    anchor.href = URL.createObjectURL(new Blob([content], {type}));
+    anchor.download = name;
+    document.body.appendChild(anchor);
+    anchor.click();
+    setTimeout(() => {
+      URL.revokeObjectURL(anchor.href);
+      anchor.remove();
+    }, 0);
+  }
+
+  function exportCsv() {
+    const rows = [[
+      'Title', 'Publisher', 'Journal / Venue', 'Type', 'Deadline', 'Conference Dates',
+      'Conference Reputation', 'Impact Factor', 'Publication Speed', 'Status',
+      'Personalized Fit', 'Topics', 'Official URL'
+    ]];
+    filteredItems().forEach((item) => rows.push([
+      item.title, item.publisher_group, item.venue || item.publisher, item.type, item.deadline || '',
+      item.event_date || '', item.conference_rank ? `${item.conference_rank} · ${item.conference_reputation || ''}` : '',
+      impactFactorSummary(item), publicationSpeedSummary(item), liveStatus(item), personalizedFit(item),
+      (item.topics || []).join('; '), item.url
+    ]));
+    const csv = rows.map((row) => row.map((value) => `"${String(value).replace(/"/g, '""')}"`).join(',')).join('\n');
+    downloadBlob(csv, 'rram-open-calls.csv', 'text/csv;charset=utf-8');
+  }
+
+  function addOptions(select, values) {
+    select.insertAdjacentHTML('beforeend', values.map((value) => `<option value="${escapeHtml(value)}">${escapeHtml(value)}</option>`).join(''));
+  }
+
+  function initFilters() {
+    addOptions($('#publisherFilter'), [...new Set(opportunities.map((item) => item.publisher_group).filter(Boolean))].sort());
+    addOptions($('#typeFilter'), [...new Set(opportunities.map((item) => item.type))].sort());
+    addOptions($('#topicFilter'), [...new Set(opportunities.flatMap((item) => item.topics || []))].sort());
+
+    $('#searchInput').addEventListener('input', (event) => { state.query = event.target.value.trim(); render(); });
+    $('#publisherFilter').addEventListener('change', (event) => { state.publisher = event.target.value; render(); });
+    $('#typeFilter').addEventListener('change', (event) => { state.type = event.target.value; render(); });
+    $('#topicFilter').addEventListener('change', (event) => { state.topic = event.target.value; render(); });
+    $('#sortFilter').addEventListener('change', (event) => { state.sort = event.target.value; render(); });
+    $('#archiveToggle').addEventListener('change', (event) => { state.showArchive = event.target.checked; render(); });
+    $('#favoriteToggle').addEventListener('change', (event) => { state.favoritesOnly = event.target.checked; render(); });
+    $$('.segmented').forEach((button) => button.addEventListener('click', () => {
+      state.view = button.dataset.view;
+      $$('.segmented').forEach((entry) => entry.classList.toggle('active', entry === button));
+      render();
+    }));
+  }
+
+  function initSummary() {
+    const dates = opportunities.map((item) => item.verified).filter(Boolean).sort();
+    $('#lastUpdated').textContent = dates.length ? dateFmt.format(new Date(`${dates.at(-1)}T12:00:00`)) : '—';
+  }
+
+  function initTheme() {
+    const saved = localStorage.getItem('rramTheme');
+    document.documentElement.dataset.theme = saved || (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+    $('#themeToggle').addEventListener('click', () => {
+      const next = document.documentElement.dataset.theme === 'light' ? 'dark' : 'light';
+      document.documentElement.dataset.theme = next;
+      localStorage.setItem('rramTheme', next);
+    });
+  }
+
+  $('#resetProfile').addEventListener('click', () => {
+    state.profile = new Set(defaultProfile);
+    localStorage.setItem('rramProfile', JSON.stringify(defaultProfile));
+    renderProfile();
+    render();
+  });
+  $('#exportCsv').addEventListener('click', exportCsv);
+  $('#dialogClose').addEventListener('click', () => $('#detailDialog').close());
+  $('#detailDialog').addEventListener('click', (event) => {
+    if (event.target === $('#detailDialog')) $('#detailDialog').close();
+  });
+
+  initTheme();
+  initFilters();
+  renderProfile();
+  initSummary();
+  render();
+})();
+
+</script>
+</body>
+</html>
